@@ -1,26 +1,35 @@
 #!/bin/bash
 
-URL=$1
+URL="$1"
+LOG_FILE="logs/health-check.log"
 
 if [ -z "$URL" ]; then
     echo "Usage: $0 <URL>"
     exit 1
 fi
 
-STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
-TIMESTAMP=$(date)
+if [[ "$URL" != http://* && "$URL" != https://* ]]; then
+    echo "Error: URL must start with http:// or https://"
+    exit 1
+fi
+TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
 
-if [ "$STATUS" -ge 200 ] && [ "$STATUS" -lt 400 ]; then
-    RESULT="HEALTHY"
+RESULT=$(curl -o /dev/null -s -w "%{http_code} %{time_total}" \
+    --connect-timeout 5 "$URL")
+
+HTTP_STATUS=$(echo "$RESULT" | awk '{print $1}')
+RESPONSE_TIME=$(echo "$RESULT" | awk '{print $2}')
+
+if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 400 ]; then
+    STATUS="HEALTHY"
     EXIT_CODE=0
 else
-    RESULT="UNHEALTHY"
+    STATUS="UNHEALTHY"
     EXIT_CODE=1
 fi
 
-echo "$TIMESTAMP | $URL | HTTP $STATUS | $RESULT"
+echo "$TIMESTAMP | $URL | HTTP $HTTP_STATUS | ${RESPONSE_TIME}s | $STATUS"
 
-mkdir -p logs
-echo "$TIMESTAMP | $URL | HTTP $STATUS | $RESULT" >> logs/health-check.log
+echo "$TIMESTAMP | $URL | HTTP $HTTP_STATUS | ${RESPONSE_TIME}s | $STATUS" >> "$LOG_FILE"
 
-exit $EXIT_CODE
+exit "$EXIT_CODE"
