@@ -8,6 +8,10 @@ if [ -z "$URL" ]; then
     exit 1
 fi
 
+if [[ "$URL" != http://* && "$URL" != https://* ]]; then
+    echo "Error: URL must start with http:// or https://"
+    exit 1
+fi
 TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
 
 RESULT=$(curl -o /dev/null -s -w "%{http_code} %{time_total}" \
