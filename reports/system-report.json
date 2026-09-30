@@ -1,0 +1,32 @@
+{
+    "timestamp": "2026-09-30T11:21:27.117531",
+    "hostname": "FALCON",
+    "uptime": "up 2 hours, 6 minutes",
+    "disk_usage": {
+        "total_gb": 1006.85,
+        "used_gb": 2.55,
+        "free_gb": 953.09
+    },
+    "memory_usage": {
+        "total_mb": 3579,
+        "used_mb": 857,
+        "free_mb": 2487
+    },
+    "service": {
+        "service": "nginx",
+        "status": "active",
+        "running": true
+    },
+    "urls": [
+        {
+            "url": "http://localhost",
+            "status_code": 200,
+            "healthy": true
+        },
+        {
+            "url": "https://github.com",
+            "status_code": 200,
+            "healthy": true
+        }
+    ]
+}
