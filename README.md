@@ -126,3 +126,17 @@ The `requests` library was installed and recorded in `requirements.txt`.
 
 The `.venv/` directory is excluded from Git using `.gitignore`.
 
+# Docker Port Mapping
+
+The port mapping 8080:80 means:
+
+- 8080 is the host port.
+- 80 is the container port.
+- Traffic sent to port 8080 on the host is forwarded to port 80 inside the Docker container.
+
+In this exercise, Nginx is listening on port 80 inside the container. Docker maps the host's port 8080 to that container port.
+
+For example:
+
+bash
+docker run -d --name devops-nginx -p 8080:80 nginx
