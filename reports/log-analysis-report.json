@@ -1,0 +1,14 @@
+{
+    "log_file": "logs/application.log",
+    "summary": {
+        "INFO": 22,
+        "WARNING": 5,
+        "ERROR": 4
+    },
+    "errors": [
+        "2026-09-30 08:07:31 ERROR Database connection timeout",
+        "2026-09-30 08:13:18 ERROR Failed to process user request",
+        "2026-09-30 08:19:10 ERROR Unable to write temporary file",
+        "2026-09-30 08:25:55 ERROR External service unavailable"
+    ]
+}
