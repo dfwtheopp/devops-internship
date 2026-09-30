@@ -1,0 +1,26 @@
+{
+    "timestamp": "2026-09-30T10:01:02.455977",
+    "services": [
+        {
+            "url": "http://localhost",
+            "status_code": 200,
+            "response_time": 0.017,
+            "status": "HEALTHY",
+            "timestamp": "2026-09-30T10:01:01.011896"
+        },
+        {
+            "url": "https://github.com",
+            "status_code": 200,
+            "response_time": 0.857,
+            "status": "HEALTHY",
+            "timestamp": "2026-09-30T10:01:01.869390"
+        },
+        {
+            "url": "https://www.google.com",
+            "status_code": 200,
+            "response_time": 0.584,
+            "status": "HEALTHY",
+            "timestamp": "2026-09-30T10:01:02.454585"
+        }
+    ]
+}
