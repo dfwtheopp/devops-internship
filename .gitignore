@@ -2,3 +2,4 @@
 !logs/health-check.log
 .env
 .venv/
+.env

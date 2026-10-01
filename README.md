@@ -231,3 +231,238 @@ After identifying the problem, I removed the failed container and understood tha
 When a Docker container is not working, I can use `docker ps -a` to check its status, `docker logs` to see errors, and `docker inspect` to get more information about the container.
 
 I also learned that port mappings and environment variables can affect whether an application works correctly inside a container.
+
+
+# Practice 4 - Failure Investigation
+
+# Incorrect Database Hostname
+
+I changed the database hostname in docker-compose.yml from db to wrong-db to create a failure.
+
+The application container still started because the Flask application does not currently connect to PostgreSQL when it starts.
+
+# Investigation
+
+I checked the containers using docker compose ps.
+
+I checked the application logs using docker compose logs app.
+
+I checked the database logs using docker compose logs db.
+
+I inspected the application container using docker inspect devops-internship-app-1.
+
+I then entered the application container and tested the hostname.
+
+wrong-db did not resolve.
+
+The correct hostname db resolved to the PostgreSQL container.
+
+# Root Cause
+
+The DB_HOST environment variable was set to wrong-db instead of db.
+
+Docker Compose uses the service name db to allow the application container to find the PostgreSQL container on the Docker network.
+
+# Fix
+
+I changed DB_HOST back to db and recreated the containers using docker compose up -d.
+
+The application started normally after the correct hostname was restored.
+
+# Lesson Learned
+
+Containers on the same Docker Compose network can communicate using the service name. localhost inside the application container refers to the application container itself, not the PostgreSQL container.
+# Day 7 - Docker Compose
+
+# Setup
+
+The application and PostgreSQL database are run using Docker Compose.
+
+Start the application and database:
+
+docker compose up -d
+
+Check the running containers:
+
+docker compose ps
+
+View the logs:
+
+docker compose logs
+
+Stop the containers:
+
+docker compose down
+
+The `.env` file contains the database configuration and is ignored by Git.
+
+The `.env.example` file contains placeholder values showing which environment variables are required.
+
+# Architecture
+
+The application runs in one container and PostgreSQL runs in a separate container.
+
+The application and database communicate through the Docker Compose network.
+
+The application uses the service name `db` to find the PostgreSQL container.
+
+PostgreSQL stores its database files in the named volume `postgres_data`.
+
+Browser / curl → Application container → Docker network → PostgreSQL container → postgres_data volume
+
+# Ports
+
+The application runs on port 8000.
+
+Port 8000 on the host is mapped to port 8000 inside the application container.
+
+PostgreSQL uses port 5432 inside the Docker network.
+
+The application uses `db:5432` to communicate with PostgreSQL.
+
+The application health endpoint can be tested using:
+
+curl http://localhost:8000/health
+
+# Useful Commands
+
+Start the containers:
+
+docker compose up -d
+
+Check container status:
+
+docker compose ps
+
+View all logs:
+
+docker compose logs
+
+View application logs:
+
+docker compose logs app
+
+View database logs:
+
+docker compose logs db
+
+Follow application logs:
+
+docker compose logs -f app
+
+List Docker networks:
+
+docker network ls
+
+Inspect the Compose network:
+
+docker network inspect devops-internship_default
+
+List Docker volumes:
+
+docker volume ls
+
+Enter the application container:
+
+docker compose exec app sh
+
+Enter PostgreSQL:
+
+docker compose exec db psql -U marvin -d devops
+
+Check the application health endpoint:
+
+curl http://localhost:8000/health
+
+Stop and remove the containers and network:
+
+docker compose down
+
+# Day 7 Troubleshooting
+
+If the application cannot communicate with PostgreSQL, check the container status and logs first.
+
+Useful commands:
+
+docker compose ps
+
+docker compose logs app
+
+docker compose logs db
+
+docker inspect devops-internship-app-1
+
+docker network inspect devops-internship_default
+
+The database hostname should be `db`.
+
+The application should not use `localhost` to connect to PostgreSQL because `localhost` inside the application container refers to the application container itself.
+
+# Day 7 Mini-Project
+
+The application runs in a Docker container.
+
+PostgreSQL runs in a separate Docker container.
+
+The application and database communicate through a Docker network.
+
+PostgreSQL data is stored using the named volume `postgres_data`.
+
+The application has a `/health` endpoint.
+
+Configuration uses environment variables.
+
+The `.env` file is ignored by Git.
+
+The `.env.example` file contains placeholder values.
+
+A failure investigation was documented in the README.
+
+# Day 7 Failure Investigation
+
+The database hostname was intentionally changed from `db` to `wrong-db`.
+
+The application container still started because the current Flask application does not connect to PostgreSQL when it starts.
+
+The container status was checked using `docker compose ps`.
+
+The application logs were checked using `docker compose logs app`.
+
+The database logs were checked using `docker compose logs db`.
+
+The application container was inspected using `docker inspect devops-internship-app-1`.
+
+The hostname was tested from inside the application container.
+
+`wrong-db` did not resolve.
+
+The correct hostname `db` resolved to the PostgreSQL container.
+
+# Root Cause
+
+The `DB_HOST` environment variable was set to `wrong-db` instead of `db`.
+
+Docker Compose uses the service name `db` to allow the application container to find the PostgreSQL container on the Docker network.
+
+# Fix
+
+The `DB_HOST` value was changed back to `db`.
+
+The application container was recreated using:
+
+docker compose up -d
+
+The application started normally after the correct hostname was restored.
+
+# Lesson Learned
+
+Docker Compose provides service-name DNS.
+
+Containers on the same Docker network can communicate using the service name.
+
+`localhost` inside the application container refers to the application container itself, not the PostgreSQL container.
+
+The `docker compose down` command removes the containers and network but keeps the named volume.
+
+The `docker compose down -v` command also removes the named volume, which deletes the PostgreSQL data stored in that volume.
+
