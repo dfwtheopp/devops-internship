@@ -71,17 +71,26 @@ The application can receive permitted external traffic, while the database shoul
 
 ## 8. Implementation and Testing
 
-The practical work involves:
+I created a separate practice VPC called devops-day9-vpc with the CIDR range 10.20.0.0/16. I created a public subnet using 10.20.1.0/24 and a private subnet using 10.20.2.0/24.
 
-* Inspecting the existing VPC, subnet CIDR, and route table.
-* Creating a separate practice VPC with public and private subnets.
-* Attaching an Internet Gateway and configuring the public route table.
-* Reviewing and configuring the relevant security rules.
-* Testing permitted connectivity and checking that unauthorized access is blocked.
-* Investigating and fixing one controlled networking failure.
+I then created and attached an Internet Gateway to the VPC. I configured a public route table with a local route and a default route to the Internet Gateway, and associated it with the public subnet.
 
-The actual resource IDs, test results, and troubleshooting findings will be recorded after the practical exercises are completed.
+I checked the private subnet's route table and confirmed that it had a local route but no default route directly to the Internet Gateway.
+
+I also created separate Security Groups for the application and database and checked their inbound rules. The application uses port 8000, while PostgreSQL uses port 5432 and allows traffic from the application Security Group.
+
+These checks helped me understand how routing and security rules work together. However, I have not yet tested an actual connection between the application and database because they have not been deployed into this practice VPC.
+
+If the application could not receive traffic on port 8000, I would check whether it was running, confirm its listening port, and inspect the Security Group rules and route table. I would then fix the identified problem and test again. An actual connectivity test and controlled failure test remain to be completed.
+
+## Failure Lab
+
+For the failure lab, I temporarily removed the inbound rule for port 8000 from the application Security Group. This simulated a networking configuration problem because connections from the previously allowed source would no longer be permitted on that port.
+
+I then restored the rule to return the Security Group to its intended configuration. This exercise helped me understand how Security Group rules affect incoming traffic and how correcting a rule can resolve a configuration problem.
+
+Since I have not deployed an application into the practice VPC, I did not test an actual application connection or observe a real outage.
 
 ## 9. Conclusion
 
-This task helped me understand how AWS networking components work together. I learned how VPCs and subnets organize resources, how route tables direct traffic, and how Security Groups and Network ACLs control access. These concepts are important for deploying applications securely in the cloud.
+This task helped me understand how AWS networking components work together. I learned how VPCs and subnets organize resources, how route tables direct traffic, and how Security Groups and Network ACLs control access. I also learned why databases should be protected from direct internet access. These concepts are important when deploying applications securely in the cloud.
