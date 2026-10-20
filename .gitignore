@@ -2,4 +2,27 @@
 !logs/health-check.log
 .env
 .venv/
-.env
+
+# Terraform working directory
+
+.terraform/
+
+# Terraform state files
+
+*.tfstate
+*.tfstate.*
+
+# Local Terraform variable files
+
+*.tfvars
+*.tfvars.json
+
+# Saved Terraform plans
+
+tfplan
+*.tfplan
+
+# AWS CLI installation files
+
+/aws/
+awscliv2.zip
