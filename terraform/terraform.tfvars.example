@@ -1,0 +1,6 @@
+# Example configuration for the Day 10 Terraform lab.
+# Replace this documentation IP with your own approved public IPv4 CIDR
+# in a separate local terraform.tfvars file before running terraform plan.
+
+app_allowed_cidr = "102.176.94.151/32"
+
